@@ -28,6 +28,9 @@ Para correr la aplicacion se esta usando
   node v16.20.2
   Sqlite3 momo base de datos
 
+Para crear la base de datos
+  rake db:create && rake db:migrate
+
 Para levantar el servidor correrlo con
 
   rails server
