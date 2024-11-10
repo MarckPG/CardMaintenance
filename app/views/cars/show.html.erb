@@ -1,0 +1,99 @@
+<p id="notice"><%= notice %></p>
+
+<div class="row mb-4">
+  <div class="col-md-3">
+    <label for="">Placas</label>
+    <%= @car.plate_number %>
+  </div>
+  <div class="col-md-3">
+    <label>Model:</label>
+    <%= @car.model %>
+  </div>
+  <div class="col-md-3">
+    <label>Year:</label>
+    <%= @car.year %>
+  </div>
+  <div class="col-md-3">
+    <button type="button" name="button" class="btn btn-success btn-sm" onclick="openModalNMS()">Nuevo Servicio</button>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Descripción</th>
+      <th>Status</th>
+      <th>Fecha servicio</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <%@car.maintenance_services.each do |m| %>
+      <tr>
+        <td><%= m.description%></td>
+        <td><%= m.status%></td>
+        <td><%= m.date%></td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+<%= link_to 'Editar', edit_car_path(@car), class:'btn btn-warning btn-sm' %> |
+<%= link_to 'Lista de carros', cars_path, class: 'btn btn-info btn-sm' %>
+
+
+<div class="modal" id="modal_new_ms" tabindex="-1" aria-labelledby="modal_custom" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" id="head_ms">
+        <h5><%= @car.plate_number %></h5>
+      </div>
+      <div class="modal-body" id="body_ms">
+        <%= form_for(@maintenance_service, :html => {:id => 'new_cmaintenance_service'}) do |form| %>
+
+          <div class="field">
+            <input type="hidden" name="maintenance_service[car_id]" id="maintenance_service_id" value="<%= @car.id %>">
+            <%= form.label :description %>
+            <%= form.text_field :description %>
+          </div>
+
+          <div class="field">
+            <%= form.label :status %>
+            <%= form.text_field :status %>
+          </div>
+
+        <% end %>
+      </div>
+      <div class="modal-footer" id="ftr_ms">
+        <button type="button" class="btn btn-danger btn-sm" onclick="closeModalMS(this)">Close</button>
+        <button type="button" name="button" class="btn btn-success btn-sm" onclick="saveData(this)">Crear servicio</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  function openModalNMS(){
+    $('#modal_new_ms').toggle()
+  }
+
+ function closeModalMS(){
+   $('#modal_new_ms').toggle()
+ }
+
+ function saveData(event){
+   const form_d = $('#new_cmaintenance_service').serialize()
+   $.ajax({
+     beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+     url: "/maintenance_services.json",
+     type: "post",
+     data: form_d,
+     dataType: 'JSON',
+     success: function(data) {
+       location.reload();
+     },
+     error: function(data,t,d){
+       $('#notice').text(data.responseJSON.description[0])
+     }
+   });
+  }
+ </script>

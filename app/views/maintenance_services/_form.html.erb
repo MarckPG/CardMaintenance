@@ -1,0 +1,33 @@
+<%= form_with(model: maintenance_service) do |form| %>
+  <% if maintenance_service.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(maintenance_service.errors.count, "error") %> prohibited this maintenance_service from being saved:</h2>
+
+      <ul>
+        <% maintenance_service.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <%= form.hidden_field :car_id %>
+
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_field :description %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+
+    <%= form.select :status, options_for_select([['pending', 0], ['in_progress', 1], ['completed', 2]]), :class => 'form-control' %>
+  </div>
+
+
+  <div class="actions">
+    <%= form.submit 'Gurdar', class: 'btn btn-success btn-sm' %>
+  </div>
+<% end %>

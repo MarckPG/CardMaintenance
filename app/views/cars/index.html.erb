@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Lista de carros</h1>
+
+<%= link_to 'Lista de mantenimiento', maintenance_services_path, class: 'btn btn-info btn-sm' %>
+<%= link_to 'Nuevo Carro', new_car_path, class: 'btn btn-success btn-sm' %>
+<table class="table" >
+  <thead>
+    <tr>
+      <th>Placa</th>
+      <th>Modelo</th>
+      <th>Año</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @cars.each do |car| %>
+      <tr>
+        <td><%= car.plate_number %></td>
+        <td><%= car.model %></td>
+        <td><%= car.year %></td>
+        <td>
+          <%if car.maintenance_services.length > 0 %>
+            <button type="button" name="button" class="btn btn-info btn-sm" id="<%= car.id %>" onclick="openLogMaintenance(this)">Historial</button>
+          <% end %>
+        </td>
+        <td><%= link_to car, :class=> "btn btn-warning btn-sm" do  %> Detalles<% end %></td>
+        <td><%= link_to edit_car_path(car), :class=> "btn btn-info btn-sm" do  %> Editar<% end %></td>
+        <td>
+          <%= button_to car, method: :delete,:onclick => "return confirm('Esta seguro de eliminar el carro, esto tambien elminara los registro de mantenimiento?')" , :class=> "btn btn-danger btn-sm" do %>Eliminar<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

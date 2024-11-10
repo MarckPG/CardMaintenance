@@ -1,0 +1,48 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Tablero de Mantenimiento</h1>
+<%= form_tag maintenance_services_path, :method => 'get' do %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-2">
+          <input  class="form-control" type="text" name="search_plate_number" value="<%= @search_plate_number %>" placeholder="placas">
+        </div>
+        <div class="col-md-2">
+           <%= select_tag :status, options_for_select([['pending', 0], ['in_progress', 1], ['completed', 2]], params[:status]), {:prompt => 'Selecione una status', class: 'form-control'} %>
+        </div>
+        <div class="col-md-2">
+            <%= submit_tag "Buscar", :name => nil, class: 'btn btn-success btn-sm' %>
+            <%= link_to 'Lista de carros', cars_path, class: 'btn btn-info btn-sm' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+<table class="table">
+  <thead class="table-light">
+    <tr>
+      <th>Placas</th>
+      <th>Descripción</th>
+      <th>Status</th>
+      <th>Fecha</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @maintenance_services.each do |maintenance_service| %>
+      <tr>
+        <td><%= maintenance_service.car.plate_number %></td>
+        <td><%= maintenance_service.description %></td>
+        <td><%= maintenance_service.status %></td>
+        <td><%= maintenance_service.date %></td>
+        <td><%= link_to maintenance_service, :class=> "btn btn-warning btn-sm" do  %> Detalles<% end %></td>
+        <td><%= link_to edit_maintenance_service_path(maintenance_service), :class=> "btn btn-info btn-sm" do  %> Editar<% end %></td>
+        <td>
+          <%= button_to maintenance_service, method: :delete,:onclick => "return confirm('Esta seguro de eliminar el registro?')" , :class=> "btn btn-danger btn-sm" do %>Eliminar<% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
